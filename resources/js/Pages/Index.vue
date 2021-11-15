@@ -163,31 +163,53 @@ export default {
     },
     props: {
     },
+    data() {
+        return {
+
+        }
+    },
     mounted() {
         this.initMap()
     },
     methods: {
         initMap() {
 
-            const options = {
-                fields: ["formatted_address", "geometry", "name"],
-                strictBounds: false,
-                types: ["establishment"],
-            };
+            var search_result = this.getRestaurants();
 
-            const autocomplete = new google.maps.places.Autocomplete(document.getElementById("search-input"), options)
+            // const options = {
+            //     fields: ["formatted_address", "geometry", "name"],
+            //     strictBounds: false,
+            //     types: ["establishment"],
+            // };
+
+            // const autocomplete = new google.maps.places.Autocomplete(document.getElementById("search-input"), options)
         
             const map = new google.maps.Map(document.getElementById("map"), {
                 center: { lat: 13.8186419, lng: 100.5386657 },
                 zoom: 13,
-                mapTypeControl: false,
+                // mapTypeControl: false,
             });
 
-            const infowindow = new google.maps.InfoWindow();
-            const infowindowContent = document.getElementById("infowindow-content");
+            // const infowindow = new google.maps.InfoWindow();
+            // const infowindowContent = document.getElementById("infowindow-content");
 
-            infowindow.setContent(infowindowContent);
+            // infowindow.setContent(infowindowContent);
+            // console.log(search_result);
 
+            search_result.then(function (response) {
+                response.forEach(function(item){
+                    new google.maps.Marker({
+                        position: item.geometry.location,
+                        map,
+                        title: item.name,
+                    });
+                })
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+
+            /*
             const marker = new google.maps.Marker({
                 map,
                 anchorPoint: new google.maps.Point(0, -29),
@@ -195,7 +217,7 @@ export default {
 
             autocomplete.addListener("place_changed", () => {
                 infowindow.close();
-                marker.setVisible(false);
+                // marker.setVisible(false);
 
                 const place = autocomplete.getPlace();
 
@@ -221,7 +243,17 @@ export default {
                 place.formatted_address;
                 infowindow.open(map, marker);
             });
+            */
 
+        },
+        async getRestaurants() {
+            try {
+                const response = await axios.get('/api/search');
+                // console.log(response.data);
+                return response.data;
+            } catch (error) {
+                console.error(error);
+            }
         }
     }
 }
