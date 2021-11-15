@@ -73,7 +73,7 @@ export default {
         
             const map = new google.maps.Map(document.getElementById("map"), {
                 center: { lat: 13.8186419, lng: 100.5386657 },
-                zoom: 13,
+                zoom: 14,
             });
 
             var bounds = new google.maps.LatLngBounds();
