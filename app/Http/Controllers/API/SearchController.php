@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 
 class SearchController extends Controller
 {
@@ -16,48 +17,46 @@ class SearchController extends Controller
      */
     public function index(Request $request)
     {
-        $keyword = 'Bang sue';
+        $keyword = $request->query('keyword', 'Bang sue');
 
-        if($request->get('keyword')){
-            $keyword = $request->get('keyword');
-        }
+        $results = Cache::get($keyword, function () use ($keyword) {
 
-        $endpoint = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json";
+            $endpoint = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json";
 
-        $response = Http::get($endpoint, [
-            'input' => $keyword,
-            'inputtype' => 'textquery',
-            'locationbias' => 'circle@13.8186419,100.5386657',
-            'fields' => 'formatted_address,name,geometry',
-            'key' => env('API_KEY')
-        ]);
+            $response = Http::get($endpoint, [
+                'input' => $keyword,
+                'inputtype' => 'textquery',
+                'locationbias' => 'circle@13.8186419,100.5386657',
+                'fields' => 'formatted_address,name,geometry',
+                'key' => env('API_KEY')
+            ]);
+    
+            $response = $response->object();
+    
+            if($response->status !== 'OK'){
+                return response()->json([]);
+            }
+    
+            $location = $response->candidates[0]->geometry->location;
+    
+            $endpoint = "https://maps.googleapis.com/maps/api/place/nearbysearch/json";
+    
+            $response = Http::get($endpoint, [
+                'location' => $location->lat.','.$location->lng,
+                'radius' => 2000,
+                'type' => 'restaurant',
+                'key' => env('API_KEY')
+            ]);
+    
+            $response = $response->object();
+    
+            if($response->status == 'OK'){
+                return response()->json($response->results);
+            }
 
-        $response = $response->object();
-
-        if($response->status !== 'OK'){
-            return response()->json([]);
-        }
-
-        $location = $response->candidates[0]->geometry->location;
-
-        $endpoint = "https://maps.googleapis.com/maps/api/place/nearbysearch/json";
-
-        $response = Http::get($endpoint, [
-            'location' => $location->lat.','.$location->lng,
-            'radius' => 2000,
-            'type' => 'restaurant',
-            // 'keyword' => $keyword,
-            'key' => env('API_KEY')
-        ]);
-
-        // dd($response->collect());
-        // dd($response->json(), $response->collect(), $response->object());
-
-        $response = $response->object();
-
-        if($response->status == 'OK'){
-            return response()->json($response->results);
-        }
+        });
+        
+        return $results;
     }
 
     /**

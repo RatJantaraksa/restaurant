@@ -9,9 +9,9 @@
 
             <div class="row g-5">
                 <div class="col-md-5 col-lg-4 ">
-                    <form class="card p-2 mb-3">
+                    <form class="card p-2 mb-3" v-on:submit.prevent="search">
                         <div class="input-group">
-                            <input type="text" id="search-input" v-model="search_input" class="form-control" placeholder="ป้อนคำค้นหา">
+                            <input type="text" id="search-input" v-model="search_input" class="form-control" placeholder="ป้อนพื้นที่ค้นหา">
                             <button type="button" class="btn btn-secondary" @click="search">ค้นหา</button>
                         </div>
                     </form>
@@ -19,32 +19,24 @@
                         <span class="text-primary">Restaurants</span>
                         <span class="badge bg-primary rounded-pill">{{ lists.length }}</span>
                     </h4>
-                    <ul class="list-group mb-3">
-                        <li v-for="item in lists" :key="item" class="list-group-item d-flex justify-content-between lh-sm">
-                            <!--
-                            <div>
-                                <h6 class="my-0">{{ item.name }}</h6>
-                                <small class="text-muted"></small>
-                                <img :src="item.icon" :alt="item.name">
+                    <div v-for="item in lists" :key="item" class="card my-2" style="width: 100%;">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img :src="item.icon" :alt="item.name" class="img-fluid rounded-start p-3" >
                             </div>
-                            <span class="text-muted"></span>
-                            -->
-                            <div class="card ">
-                                <div class="row g-0">
-                                    <div class="col-md-4">
-                                        <img :src="item.icon" :alt="item.name" class="img-fluid rounded-start p-3" >
-                                    </div>
-                                    <div class="col-md-8">
-                                        <div class="card-body">
-                                            <h5 class="card-title">{{ item.name }}</h5>
-                                            <p class="card-text">{{ item.vicinity }}.</p>
-                                            <p class="card-text"><small class="text-muted">{{ item.geometry.location.lat }} {{ item.geometry.location.lng }} </small></p>
-                                        </div>
-                                    </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ item.name }}</h5>
+                                    <p class="card-text">{{ item.vicinity }}.</p>
+                                    <p class="card-text">
+                                        <small class="text-muted">
+                                        {{ item.geometry.location.lat }} , {{ item.geometry.location.lng }}
+                                        </small>
+                                    </p>
                                 </div>
                             </div>
-                        </li>
-                    </ul>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-7 col-lg-8 order-md-last">
                     <div id="map"></div>
