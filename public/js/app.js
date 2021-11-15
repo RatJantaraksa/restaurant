@@ -23957,110 +23957,75 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     };
   },
   mounted: function mounted() {
-    this.initMap();
+    this.getRestaurants();
   },
   methods: {
     initMap: function initMap() {
-      var search_result = this.getRestaurants(); // const options = {
-      //     fields: ["formatted_address", "geometry", "name"],
-      //     strictBounds: false,
-      //     types: ["establishment"],
-      // };
-      // const autocomplete = new google.maps.places.Autocomplete(document.getElementById("search-input"), options)
-
       var map = new google.maps.Map(document.getElementById("map"), {
         center: {
           lat: 13.8186419,
           lng: 100.5386657
         },
-        zoom: 13 // mapTypeControl: false,
-
-      }); // const infowindow = new google.maps.InfoWindow();
-      // const infowindowContent = document.getElementById("infowindow-content");
-      // infowindow.setContent(infowindowContent);
-      // console.log(search_result);
-
-      var self = this;
-      search_result.then(function (response) {
-        self.lists = response;
-        self.lists.forEach(function (item) {
-          console.log(item);
-          var marker = new google.maps.Marker({
-            position: item.geometry.location,
-            map: map,
-            title: item.name
-          });
-          var iw = new google.maps.InfoWindow({
-            content: item.name
-          });
-          google.maps.event.addListener(marker, "click", function (e) {
-            iw.open(map, this);
-          });
+        zoom: 13
+      });
+      this.lists.forEach(function (item) {
+        var marker = new google.maps.Marker({
+          position: item.geometry.location,
+          map: map,
+          title: item.name
         });
-      })["catch"](function (error) {
-        console.log(error);
+        var iw = new google.maps.InfoWindow({
+          content: item.name
+        });
+        google.maps.event.addListener(marker, "click", function (e) {
+          iw.open(map, this);
+        });
       });
-      /*
-      const marker = new google.maps.Marker({
-          map,
-          anchorPoint: new google.maps.Point(0, -29),
-      });
-       autocomplete.addListener("place_changed", () => {
-          infowindow.close();
-          // marker.setVisible(false);
-           const place = autocomplete.getPlace();
-           if (!place.geometry || !place.geometry.location) {
-          // User entered the name of a Place that was not suggested and
-          // pressed the Enter key, or the Place Details request failed.
-          window.alert("No details available for input: '" + place.name + "'");
-          return;
-          }
-           // If the place has a geometry, then present it on a map.
-          if (place.geometry.viewport) {
-          map.fitBounds(place.geometry.viewport);
-          } else {
-          map.setCenter(place.geometry.location);
-          map.setZoom(17);
-          }
-           marker.setPosition(place.geometry.location);
-          marker.setVisible(true);
-          infowindowContent.children["place-name"].textContent = place.name;
-          infowindowContent.children["place-address"].textContent =
-          place.formatted_address;
-          infowindow.open(map, marker);
-      });
-      */
+      map.fitBounds();
     },
     getRestaurants: function getRestaurants() {
+      var _arguments = arguments,
+          _this = this;
+
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
-        var response;
+        var search, response;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _context.prev = 0;
-                _context.next = 3;
-                return axios.get('/api/search');
+                search = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : 'Bang sue';
+                _context.prev = 1;
+                _context.next = 4;
+                return axios.get('/api/search', {
+                  params: {
+                    keyword: search
+                  }
+                });
 
-              case 3:
+              case 4:
                 response = _context.sent;
-                return _context.abrupt("return", response.data);
+                _this.lists = response.data;
 
-              case 7:
-                _context.prev = 7;
-                _context.t0 = _context["catch"](0);
+                _this.initMap();
+
+                _context.next = 12;
+                break;
+
+              case 9:
+                _context.prev = 9;
+                _context.t0 = _context["catch"](1);
                 console.error(_context.t0);
 
-              case 10:
+              case 12:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[0, 7]]);
+        }, _callee, null, [[1, 9]]);
       }))();
     },
     search: function search() {
-      console.log(this.search_input);
+      this.getRestaurants(this.search_input);
     }
   }
 });
@@ -25479,53 +25444,54 @@ var _hoisted_5 = {
 var _hoisted_6 = {
   "class": "input-group"
 };
+var _hoisted_7 = {
+  "class": "d-flex justify-content-between align-items-center mb-3"
+};
 
-var _hoisted_7 = /*#__PURE__*/_withScopeId(function () {
-  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h4", {
-    "class": "d-flex justify-content-between align-items-center mb-3"
-  }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+var _hoisted_8 = /*#__PURE__*/_withScopeId(function () {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
     "class": "text-primary"
-  }, "ผลการค้นหา"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <span class=\"badge bg-primary rounded-pill\">3</span> ")], -1
+  }, "Restaurants", -1
   /* HOISTED */
   );
 });
 
-var _hoisted_8 = {
-  "class": "list-group mb-3"
-};
 var _hoisted_9 = {
-  "class": "card mb-3",
-  style: {
-    "max-width": "540px"
-  }
+  "class": "badge bg-primary rounded-pill"
 };
 var _hoisted_10 = {
-  "class": "row g-0"
+  "class": "list-group mb-3"
 };
 var _hoisted_11 = {
+  "class": "card"
+};
+var _hoisted_12 = {
+  "class": "row g-0"
+};
+var _hoisted_13 = {
   "class": "col-md-4"
 };
-var _hoisted_12 = ["src", "alt"];
-var _hoisted_13 = {
+var _hoisted_14 = ["src", "alt"];
+var _hoisted_15 = {
   "class": "col-md-8"
 };
-var _hoisted_14 = {
+var _hoisted_16 = {
   "class": "card-body"
 };
-var _hoisted_15 = {
+var _hoisted_17 = {
   "class": "card-title"
 };
-var _hoisted_16 = {
-  "class": "card-text"
-};
-var _hoisted_17 = {
-  "class": "card-text"
-};
 var _hoisted_18 = {
+  "class": "card-text"
+};
+var _hoisted_19 = {
+  "class": "card-text"
+};
+var _hoisted_20 = {
   "class": "text-muted"
 };
 
-var _hoisted_19 = /*#__PURE__*/_withScopeId(function () {
+var _hoisted_21 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "col-md-7 col-lg-8 order-md-last"
   }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
@@ -25552,26 +25518,28 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[1] || (_cache[1] = function () {
       return $options.search && $options.search.apply($options, arguments);
     })
-  }, "ค้นหา")])]), _hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_8, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.lists, function (item) {
+  }, "ค้นหา")])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h4", _hoisted_7, [_hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.lists.length), 1
+  /* TEXT */
+  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_10, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.lists, function (item) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", {
       key: item,
       "class": "list-group-item d-flex justify-content-between lh-sm"
-    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("\n                            <div>\n                                <h6 class=\"my-0\">{{ item.name }}</h6>\n                                <small class=\"text-muted\"></small>\n                                <img :src=\"item.icon\" :alt=\"item.name\">\n                            </div>\n                            <span class=\"text-muted\"></span>\n                            "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("\n                            <div>\n                                <h6 class=\"my-0\">{{ item.name }}</h6>\n                                <small class=\"text-muted\"></small>\n                                <img :src=\"item.icon\" :alt=\"item.name\">\n                            </div>\n                            <span class=\"text-muted\"></span>\n                            "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
       src: item.icon,
       alt: item.name,
       "class": "img-fluid rounded-start p-3"
     }, null, 8
     /* PROPS */
-    , _hoisted_12)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h5", _hoisted_15, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(item.name), 1
+    , _hoisted_14)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_15, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h5", _hoisted_17, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(item.name), 1
     /* TEXT */
-    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_16, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(item.vicinity) + ".", 1
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(item.vicinity) + ".", 1
     /* TEXT */
-    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", _hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(item.geometry.location.lat) + " " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(item.geometry.location.lng), 1
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_19, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", _hoisted_20, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(item.geometry.location.lat) + " " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(item.geometry.location.lng), 1
     /* TEXT */
     )])])])])])]);
   }), 128
   /* KEYED_FRAGMENT */
-  ))])]), _hoisted_19])])]);
+  ))])]), _hoisted_21])])]);
 }
 
 /***/ }),

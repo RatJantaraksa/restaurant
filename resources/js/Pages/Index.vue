@@ -16,8 +16,8 @@
                         </div>
                     </form>
                     <h4 class="d-flex justify-content-between align-items-center mb-3">
-                        <span class="text-primary">ผลการค้นหา</span>
-                        <!-- <span class="badge bg-primary rounded-pill">3</span> -->
+                        <span class="text-primary">Restaurants</span>
+                        <span class="badge bg-primary rounded-pill">{{ lists.length }}</span>
                     </h4>
                     <ul class="list-group mb-3">
                         <li v-for="item in lists" :key="item" class="list-group-item d-flex justify-content-between lh-sm">
@@ -29,21 +29,20 @@
                             </div>
                             <span class="text-muted"></span>
                             -->
-
-                            <div class="card mb-3" style="max-width: 540px;">
-  <div class="row g-0">
-    <div class="col-md-4">
-      <img :src="item.icon" :alt="item.name" class="img-fluid rounded-start p-3" >
-    </div>
-    <div class="col-md-8">
-      <div class="card-body">
-        <h5 class="card-title">{{ item.name }}</h5>
-        <p class="card-text">{{ item.vicinity }}.</p>
-        <p class="card-text"><small class="text-muted">{{ item.geometry.location.lat }} {{ item.geometry.location.lng }} </small></p>
-      </div>
-    </div>
-  </div>
-</div>
+                            <div class="card ">
+                                <div class="row g-0">
+                                    <div class="col-md-4">
+                                        <img :src="item.icon" :alt="item.name" class="img-fluid rounded-start p-3" >
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ item.name }}</h5>
+                                            <p class="card-text">{{ item.vicinity }}.</p>
+                                            <p class="card-text"><small class="text-muted">{{ item.geometry.location.lat }} {{ item.geometry.location.lng }} </small></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </li>
                     </ul>
                 </div>
@@ -75,107 +74,47 @@ export default {
         }
     },
     mounted() {
-        this.initMap()
+        this.getRestaurants();
     },
     methods: {
         initMap() {
-
-            var search_result = this.getRestaurants();
-
-            // const options = {
-            //     fields: ["formatted_address", "geometry", "name"],
-            //     strictBounds: false,
-            //     types: ["establishment"],
-            // };
-
-            // const autocomplete = new google.maps.places.Autocomplete(document.getElementById("search-input"), options)
         
             const map = new google.maps.Map(document.getElementById("map"), {
                 center: { lat: 13.8186419, lng: 100.5386657 },
                 zoom: 13,
-                // mapTypeControl: false,
             });
 
-            // const infowindow = new google.maps.InfoWindow();
-            // const infowindowContent = document.getElementById("infowindow-content");
+            this.lists.forEach(function(item){
 
-            // infowindow.setContent(infowindowContent);
-            // console.log(search_result);
-            var self = this;
-            search_result.then(function (response) {
-                self.lists = response;
+                var marker = new google.maps.Marker({
+                    position: item.geometry.location,
+                    map,
+                    title: item.name,
+                });
 
-                self.lists.forEach(function(item){
+                var iw = new google.maps.InfoWindow({
+                    content: item.name
+                });
 
-                    console.log(item);
-
-                    var marker = new google.maps.Marker({
-                        position: item.geometry.location,
-                        map,
-                        title: item.name,
-                    });
-
-                    var iw = new google.maps.InfoWindow({
-                        content: item.name
-                    });
-
-                    google.maps.event.addListener(marker, "click", function (e) {
-                        iw.open(map, this);
-                    });
-                })
-            })
-            .catch(function (error) {
-                console.log(error);
+                google.maps.event.addListener(marker, "click", function (e) {
+                    iw.open(map, this);
+                });
             })
 
-            /*
-            const marker = new google.maps.Marker({
-                map,
-                anchorPoint: new google.maps.Point(0, -29),
-            });
-
-            autocomplete.addListener("place_changed", () => {
-                infowindow.close();
-                // marker.setVisible(false);
-
-                const place = autocomplete.getPlace();
-
-                if (!place.geometry || !place.geometry.location) {
-                // User entered the name of a Place that was not suggested and
-                // pressed the Enter key, or the Place Details request failed.
-                window.alert("No details available for input: '" + place.name + "'");
-                return;
-                }
-
-                // If the place has a geometry, then present it on a map.
-                if (place.geometry.viewport) {
-                map.fitBounds(place.geometry.viewport);
-                } else {
-                map.setCenter(place.geometry.location);
-                map.setZoom(17);
-                }
-
-                marker.setPosition(place.geometry.location);
-                marker.setVisible(true);
-                infowindowContent.children["place-name"].textContent = place.name;
-                infowindowContent.children["place-address"].textContent =
-                place.formatted_address;
-                infowindow.open(map, marker);
-            });
-            */
-
+            map.fitBounds()
         },
-        async getRestaurants() {
+        async getRestaurants(search = 'Bang sue') {
             try {
-                const response = await axios.get('/api/search');
-                // console.log(response.data);
-                return response.data;
+                const response = await axios.get('/api/search', { params: { keyword: search }});
+                this.lists = response.data;
+
+                this.initMap()
             } catch (error) {
                 console.error(error);
             }
         },
         search(){
-            console.log(this.search_input);
+            this.getRestaurants(this.search_input)
         }
     }
 }
