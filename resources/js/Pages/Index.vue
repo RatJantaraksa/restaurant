@@ -4,7 +4,7 @@
             <div class="py-5 text-center">
                 <img class="d-block mx-auto mb-4" src="https://cdn-icons-png.flaticon.com/512/2082/2082041.png" alt="" width="72" height="57">
                 <h2>ค้นหาร้านอาหารใกล้เคียง</h2>
-                <p class="lead">ค้นหาร้านอาหารใกล้เคียง.</p>
+                <p class="lead">ค้นหาร้านอาหารในพื้นที่ใกล้เคียงตามต้องการ.</p>
             </div>
 
             <div class="row g-5">

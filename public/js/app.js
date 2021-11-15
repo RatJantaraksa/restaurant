@@ -25430,7 +25430,7 @@ var _hoisted_2 = /*#__PURE__*/_withScopeId(function () {
     height: "57"
   }), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", null, "ค้นหาร้านอาหารใกล้เคียง"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", {
     "class": "lead"
-  }, "ค้นหาร้านอาหารใกล้เคียง.")], -1
+  }, "ค้นหาร้านอาหารในพื้นที่ใกล้เคียงตามต้องการ.")], -1
   /* HOISTED */
   );
 });
