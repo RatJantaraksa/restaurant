@@ -13,12 +13,13 @@
         <!-- Scripts -->
         @routes
         <script src="{{ mix('js/app.js') }}" defer></script>
+        <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyAevQo18eMN1cgoSHQebcdlKElRLGkxPts"></script>
     </head>
     <body class="bg-light">
         @inertia
 
         @env ('local')
-            <script src="http://localhost:8080/js/bundle.js"></script>
+            <!-- <script src="http://localhost:8080/js/bundle.js"></script> -->
         @endenv
     </body>
 </html>
