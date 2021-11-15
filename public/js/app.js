@@ -23968,9 +23968,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         },
         zoom: 13
       });
+      var bounds = new google.maps.LatLngBounds();
       this.lists.forEach(function (item) {
+        var location = new google.maps.LatLng(item.geometry.location.lat, item.geometry.location.lng);
         var marker = new google.maps.Marker({
-          position: item.geometry.location,
+          position: location,
           map: map,
           title: item.name
         });
@@ -23980,8 +23982,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         google.maps.event.addListener(marker, "click", function (e) {
           iw.open(map, this);
         });
+        bounds.extend(location);
       });
-      map.fitBounds();
+      map.fitBounds(bounds);
     },
     getRestaurants: function getRestaurants() {
       var _arguments = arguments,

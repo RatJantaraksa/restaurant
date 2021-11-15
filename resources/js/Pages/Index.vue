@@ -84,10 +84,14 @@ export default {
                 zoom: 13,
             });
 
+            var bounds = new google.maps.LatLngBounds();
+
             this.lists.forEach(function(item){
 
+                var location = new google.maps.LatLng(item.geometry.location.lat, item.geometry.location.lng);
+
                 var marker = new google.maps.Marker({
-                    position: item.geometry.location,
+                    position: location,
                     map,
                     title: item.name,
                 });
@@ -99,9 +103,11 @@ export default {
                 google.maps.event.addListener(marker, "click", function (e) {
                     iw.open(map, this);
                 });
+
+                bounds.extend(location);
             })
 
-            map.fitBounds()
+            map.fitBounds(bounds);
         },
         async getRestaurants(search = 'Bang sue') {
             try {
