@@ -13,7 +13,7 @@
         <!-- Scripts -->
         @routes
         <script src="{{ mix('js/app.js') }}" defer></script>
-        <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key={{ env('API_KEY_') }}"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key={{ env('API_KEY') }}"></script>
     </head>
     <body class="bg-light">
         @inertia
