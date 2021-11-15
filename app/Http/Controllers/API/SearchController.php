@@ -21,8 +21,8 @@ class SearchController extends Controller
 
         $results = Cache::get($keyword, function () use ($keyword) {
 
+            // Find location of search area
             $endpoint = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json";
-
             $response = Http::get($endpoint, [
                 'input' => $keyword,
                 'inputtype' => 'textquery',
@@ -36,18 +36,18 @@ class SearchController extends Controller
             if($response->status !== 'OK'){
                 return response()->json([]);
             }
-    
+            
             $location = $response->candidates[0]->geometry->location;
-    
+            
+            // Find restaurant of area
             $endpoint = "https://maps.googleapis.com/maps/api/place/nearbysearch/json";
-    
             $response = Http::get($endpoint, [
                 'location' => $location->lat.','.$location->lng,
                 'radius' => 2000,
                 'type' => 'restaurant',
                 'key' => env('API_KEY')
             ]);
-    
+            
             $response = $response->object();
     
             if($response->status == 'OK'){
@@ -55,7 +55,7 @@ class SearchController extends Controller
             }
 
         });
-        
+
         return $results;
     }
 
